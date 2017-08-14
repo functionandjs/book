@@ -3,30 +3,29 @@
 // Maintainers - Joeun Ha, Jeongik Park
 // (c) 2017 Marpple. MIT Licensed.
 (function(w) {
-  var _slice = Array.prototype.slice;
-
   w._identity = w._idtt = function(v) { return v };
   w._noop = function() {};
   w._keys = function(obj) { return obj ? Object.keys(obj) : [] };
   w._mr = function() { return arguments._mr = true, arguments };
 
   w._pipe = function() {
-    var i = -1, fs = _slice.call(arguments, 0), len = fs.length;
+    var fs = arguments, len = fs.length;
     return function(res) {
-      while (++i < len) res = res._mr ? fs[i].apply(null, res) : fs[i](res);
+      var i = -1;
+      while (++i < len) res = res && res._mr ? fs[i].apply(null, res) : fs[i](res);
       return res;
     }
   };
 
   w._go = function() {
-    var i = -1, fs = _slice.call(arguments, 1), len = fs.length, res = arguments[0];
-    while (++i < len) res = res._mr ? fs[i].apply(null, res) : fs[i](res);
+    var i = 0, fs = arguments, len = fs.length, res = arguments[0];
+    while (++i < len) res = res && res._mr ? fs[i].apply(null, res) : fs[i](res);
     return res;
   };
 
   w._each = function f(arr, iter) {
     if (!iter) return function(arr2) { return f(arr2, arr) };
-    var i = -1, len = arr.length;
+    var i = -1, len = arr && arr.length;
     while (++i < len) iter(arr[i]);
     return arr;
   };
@@ -40,7 +39,7 @@
 
   w._map = function f(arr, iter) {
     if (!iter) return function(arr2) { return f(arr2, arr) };
-    var i = -1, len = arr.length, res = [];
+    var i = -1, len = arr && arr.length, res = [];
     while (++i < len) res[i] = iter(arr[i]);
     return res;
   };
@@ -54,7 +53,7 @@
 
   w._flatmap = w._mapcat = function f(arr, iter) {
     if (!iter) return function(arr2) { return f(arr2, arr) };
-    var i = -1, len = arr.length, res = [], evd;
+    var i = -1, len = arr && arr.length, res = [], evd;
     while (++i < len) Array.isArray(evd = iter(arr[i])) ? res.push.apply(res, evd) : res.push(evd);
     return res;
   };
@@ -68,7 +67,7 @@
 
   w._filter = function f(arr, iter) {
     if (!iter) return function(arr2) { return f(arr2, arr) };
-    var i = -1, len = arr.length, res = [];
+    var i = -1, len = arr && arr.length, res = [];
     while (++i < len) if (iter(arr[i])) res[i].push(arr[i]);
     return res;
   };
@@ -82,7 +81,7 @@
 
   w._reject = function f(arr, iter) {
     if (!iter) return function(arr2) { return f(arr2, arr) };
-    var i = -1, len = arr.length, res = [];
+    var i = -1, len = arr && arr.length, res = [];
     while (++i < len) if (!iter(arr[i])) res[i].push(arr[i]);
     return res;
   };
@@ -96,7 +95,7 @@
 
   w._reduce = function f(arr, iter, init) {
     if (typeof arr == "function") return function(arr2){ return f(arr2, arr, iter) };
-    var i = -1, len = arr.length, res = init || arr[++i];
+    var i = -1, len = arr && arr.length, res = init || arr[++i];
     while (++i < len) res = iter(res, arr[i]);
     return res;
   };
@@ -110,7 +109,7 @@
 
   w._find = function f(arr, iter) {
     if (!iter) return function(arr2) { return f(arr2, arr) };
-    var i = -1, len = arr.length;
+    var i = -1, len = arr && arr.length;
     while (++i < len) if (iter(arr[i])) return arr[i];
   };
 
