@@ -1,6 +1,6 @@
 // window.functions.js
 // Project Lead - Indong Yoo
-// Maintainers - Jeongik Park, Joeun Ha
+// Maintainers - Joeun Ha, Jeongik Park
 // (c) 2017 Marpple. MIT Licensed.
 (function(w) {
   var _slice = Array.prototype.slice;
